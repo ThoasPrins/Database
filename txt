@@ -1,0 +1,1 @@
+Select * from scan where kenteken =(select kenteken from RDW where cilinderinhoud > 2000);
