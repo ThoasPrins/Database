@@ -1,0 +1,166 @@
+Spiekbriefje SQL Examen
+
+---
+
+GEBRUIKER & RECHTEN 
+Gebruik deze commando's om een nieuwe gebruiker te maken en de benodigde rechten toe te kennen.
+
+```
+CREATE USER 'naam'@'host' IDENTIFIED BY 'wachtwoord';
+```
+- 'naam': De gebruikersnaam die je wilt aanmaken.  
+- 'host': Geeft aan vanaf welke locatie de gebruiker mag inloggen (bijvoorbeeld 'localhost' voor lokaal of '%' voor overal).  
+- 'wachtwoord': Het kijkje naar de beveiligde toegang.
+
+```
+GRANT SELECT, INSERT, UPDATE, DELETE ON tabel TO 'naam'@'host';
+```
+- Hiermee geef je de gebruiker de rechten om gegevens te halen (SELECT), toe te voegen (INSERT), te wijzigen (UPDATE) en te verwijderen (DELETE) op de opgegeven `tabel`.
+
+---
+
+SELECT  
+Gebruik deze commando's om data uit je tabellen op te vragen.
+
+```
+SELECT * FROM tabel;
+```
+- Selecteert alle kolommen en rijen uit de tabel.
+
+```
+SELECT kolom1, kolom2 FROM tabel;
+```
+- Selecteert alleen de opgegeven kolommen (kolom1 en kolom2).
+
+```
+SELECT * FROM tabel WHERE kolom = 'waarde';
+```
+- Selecteert rijen waar de opgegeven kolom exact de 'waarde' heeft.
+
+```
+SELECT * FROM tabel ORDER BY kolom ASC|DESC;
+```
+- Sorteert de resultaten op `kolom` in oplopende (ASC) of aflopende (DESC) volgorde.
+
+```
+SELECT kolom AS bijnaam FROM tabel;
+```
+- Geeft een alias aan een kolom, zodat deze in de resultaten een andere naam krijgt (bijvoorbeeld voor leesbaarheid).
+
+---
+
+AGGREGATIE
+Gebruik aggregatiefuncties om samenvattende berekeningen op data uit te voeren.
+
+```
+SELECT COUNT(*) FROM tabel;
+```
+- Telt het aantal rijen in de opgegeven tabel.
+
+```
+SELECT SUM(kolom) FROM tabel;
+```
+- Berekent de totale som van alle waarden in de kolom.
+
+```
+SELECT AVG(kolom) FROM tabel;
+```
+- Geeft het gemiddelde van de waarden in de kolom.
+
+```
+SELECT MAX(kolom), MIN(kolom) FROM tabel;
+```
+- Berekent respectievelijk de maximale en minimale waarde in de kolom.
+
+---
+
+OPERATORS 
+Deze operators gebruik je in je WHERE-clausules om filtervoorwaarden te specificeren.
+
+- =  
+  Betekent "gelijk aan".
+- != of <>
+  Betekent "ongelijk aan".
+- <, >, <=, >= 
+  Vergelijkingsoperatoren om waarden te vergelijken (kleiner, groter, etc.).
+- IS NULL / IS NOT NULL
+  Gebruikt om te controleren of een kolom geen waarde (NULL) of wel een waarde heeft.
+- IN (1,2,3)  
+  Controleert of de waarde in een lijst voorkomt.
+- BETWEEN x AND y  
+  Geeft een bereik op waarin de waarde moet vallen.
+- LIKE '%tekst%' 
+  Zoekt naar een bepaald patroon. De `%` fungeert als wildcard die één of meer tekens vertegenwoordigt.
+
+---
+
+SUBQUERY  
+Een subquery is een query binnen een andere query en wordt vaak gebruikt om een resultaat als voorwaarde te gebruiken.
+
+```
+SELECT naam FROM tabel WHERE kolom = (
+  SELECT MIN(kolom) FROM tabel
+);
+```
+- De subquery `(SELECT MIN(kolom) FROM tabel)` zoekt de kleinste waarde in de kolom.
+- De hoofdquery selecteert vervolgens de rijen waarvan `kolom` gelijk is aan deze minimumwaarde.
+
+---
+
+JOIN  
+JOINs worden gebruikt om rijen uit twee of meer tabellen te combineren op basis van een gerelateerde kolom.
+
+```
+SELECT t1.kolom, t2.kolom FROM Tabel1 t1
+JOIN Tabel2 t2 ON t1.kolom = t2.kolom;
+```
+- Dit is een INNER JOIN (standaard JOIN). Het geeft enkel de rijen weer waar er een match is in beide tabellen.
+
+```
+SELECT t1.kolom, t2.kolom FROM Tabel1 t1
+LEFT JOIN Tabel2 t2 ON t1.kolom = t2.kolom;
+```
+- De LEFT JOIN retourneert *alle* rijen uit de linker tabel (Tabel1). Als er geen overeenkomst is in Tabel2, worden de kolommen van Tabel2 als `NULL` getoond.
+
+---
+
+INSERT 
+Met INSERT voeg je nieuwe rijen toe aan een tabel.
+
+```
+INSERT INTO tabel (kolom1, kolom2)
+VALUES (waarde1, waarde2);
+```
+- Hiermee voeg je een nieuwe rij toe met de gespecificeerde `waarde1` voor `kolom1` en `waarde2` voor `kolom2`.
+
+---
+
+UPDATE
+UPDATE commando's wijzigen bestaande data in je tabellen.  
+Let op! Schakel eerst de veilige update-modus uit als dat nodig is.
+
+```
+SET SQL_SAFE_UPDATES = 0;
+```
+- Hiermee zorg je dat je UPDATE-commando zonder WHERE-clausule niet wordt geweigerd (gebruik dit voorzichtig).
+
+```
+UPDATE tabel SET kolom = waarde WHERE conditie;
+```
+- Hiermee wijzig je de waarden van `kolom` naar `waarde` voor de rijen die voldoen aan de `conditie`.
+
+---
+
+DELETE 
+Verwijder data met DELETE.  
+Wees extra voorzichtig, want zonder een WHERE-clausule worden alle rijen verwijderd.
+
+```
+DELETE FROM tabel WHERE conditie;
+```
+- Verwijdert rijen die aan de gegeven `conditie` voldoen.
+
+---
+
+Extra Tips:
+- Zonder een WHERE-clausule passen UPDATE en DELETE de actie toe op *alle* rijen, wat in een examen of productieomgeving fouten kan veroorzaken.  
